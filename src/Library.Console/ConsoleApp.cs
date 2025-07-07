@@ -2,6 +2,7 @@
 using Library.ApplicationCore.Entities;
 using Library.ApplicationCore.Enums;
 using Library.Console;
+using Library.Infrastructure.Data;
 
 public class ConsoleApp
 {
@@ -16,13 +17,15 @@ public class ConsoleApp
     ILoanRepository _loanRepository;
     ILoanService _loanService;
     IPatronService _patronService;
+    JsonData _jsonData;
 
-    public ConsoleApp(ILoanService loanService, IPatronService patronService, IPatronRepository patronRepository, ILoanRepository loanRepository)
+    public ConsoleApp(ILoanService loanService, IPatronService patronService, IPatronRepository patronRepository, ILoanRepository loanRepository, JsonData jsonData)
     {
         _patronRepository = patronRepository;
         _loanRepository = loanRepository;
         _loanService = loanService;
         _patronService = patronService;
+        _jsonData = jsonData;
     }
 
     public async Task Run()
@@ -67,7 +70,26 @@ public class ConsoleApp
 
         Console.WriteLine("Matching Patrons:");
         PrintPatronsList(matchingPatrons);
+        // Adiciona opção para ver livros disponíveis
+        await ShowAvailableBooksOption();
         return ConsoleState.PatronSearchResults;
+    }
+
+    private async Task ShowAvailableBooksOption()
+    {
+        Console.WriteLine("\nDigite 'v' para ver livros disponíveis.");
+        var input = Console.ReadLine();
+        if (input == "v")
+        {
+            var availableBooks = _jsonData.GetAvailableBookItems();
+            Console.WriteLine("\nLivros disponíveis:");
+            foreach (var item in availableBooks)
+            {
+                Console.WriteLine($"Exemplar: {item.Id} - Título: {item.Book?.Title ?? "(Sem título)"}");
+            }
+            Console.WriteLine("\nPressione qualquer tecla para voltar ao menu inicial.");
+            Console.ReadKey();
+        }
     }
 
     static string ReadPatronName()

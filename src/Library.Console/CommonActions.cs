@@ -9,5 +9,7 @@ public enum CommonActions
     SearchPatrons = 4,
     RenewPatronMembership = 8,
     ReturnLoanedBook = 16,
-    ExtendLoanedBook = 32
+    ExtendLoanedBook = 32,
+    ViewAvailableBooks = 64,
+    SearchBooks = 128
 }

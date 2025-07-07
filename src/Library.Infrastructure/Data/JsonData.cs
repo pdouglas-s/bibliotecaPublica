@@ -209,4 +209,12 @@ public class JsonData
         }
     }
 
+    // Novo método: retorna todos os BookItems disponíveis
+    public List<BookItem> GetAvailableBookItems()
+    {
+        if (BookItems == null || Loans == null)
+            return new List<BookItem>();
+        return BookItems.Where(bi => BookItem.IsAvailable(bi.Id, Loans)).ToList();
+    }
+
 }
