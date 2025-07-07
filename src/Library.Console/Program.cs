@@ -18,7 +18,16 @@ services.AddScoped<ILoanService, LoanService>();
 services.AddScoped<IPatronService, PatronService>();
 
 services.AddSingleton<JsonData>();
-services.AddSingleton<ConsoleApp>();
+services.AddSingleton<ConsoleApp>(provider =>
+{
+    return new ConsoleApp(
+        provider.GetRequiredService<ILoanService>(),
+        provider.GetRequiredService<IPatronService>(),
+        provider.GetRequiredService<IPatronRepository>(),
+        provider.GetRequiredService<ILoanRepository>(),
+        provider.GetRequiredService<JsonData>()
+    );
+});
 
 var servicesProvider = services.BuildServiceProvider();
 
